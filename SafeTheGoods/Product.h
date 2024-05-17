@@ -23,7 +23,7 @@ public:
 	Product(Product&& other) = delete;
 	Product& operator=(Product&& other) = delete;
 private:
-	const Vector2f m_Speed{ 100, 0 };
+	const Vector2f m_Speed;
 	Point2f m_MiddlePos;
 	Rectf m_Shape;
 	std::unique_ptr<Texture> m_pTexture;

@@ -16,11 +16,11 @@ void ProductManager::Update(float elapsedSec)
 		product->Update(elapsedSec);
 	}
 
-	if (m_pProducts.size() < MAX_PRODUCTS)
+	if (not m_pProducts.size() == 0)
 	{
-		if (not m_pProducts.size() == 0)
+		if (m_pProducts.size() < MAX_PRODUCTS)
 		{
-			if (m_pProducts[m_pProducts.size() - 1]->GetMiddlePos().x >= 70)
+			if (m_pProducts.back()->GetMiddlePos().x >= 70)
 			{
 				auto random = rand() % m_FrequentGoodProduct;
 				if (random == 0)
@@ -34,10 +34,10 @@ void ProductManager::Update(float elapsedSec)
 				AddProduct(m_ShapeProduct, m_TexturePath);
 			}
 
-			if (m_pProducts[0]->GetMiddlePos().x >= 885)
-			{
-				RemoveProduct(0);
-			}
+		}
+		if (m_pProducts[0]->GetMiddlePos().x >= 850)
+		{
+			RemoveProduct();
 		}
 	}
 }
@@ -53,16 +53,12 @@ void ProductManager::Draw() const
 void ProductManager::AddProduct(Rectf& shape, std::string texturePath)
 {
 	m_pProducts.emplace_back(std::make_unique<Product>(shape, texturePath));
+	std::cout << m_pProducts.size() << std::endl;
 }
 
 void ProductManager::RemoveProduct()
 {
-	m_pProducts.pop_back();
-}
-
-void ProductManager::RemoveProduct(int index)
-{
-	m_pProducts.erase(m_pProducts.begin() + index);
+	m_pProducts.erase(m_pProducts.begin());
 }
 
 bool ProductManager::CheckIfProductIsInCheckpoint(const Rectf& rect) const

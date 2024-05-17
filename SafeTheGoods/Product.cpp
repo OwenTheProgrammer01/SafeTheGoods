@@ -3,7 +3,7 @@
 #include "utils.h"
 
 Product::Product(Rectf& shape, std::string texturePath)
-	: m_MiddlePos(Point2f{ shape.left + shape.width / 2, shape.bottom + shape.height / 2 }), m_Shape(shape), m_pTexture(std::make_unique<Texture>(texturePath)) {}
+	: m_Speed{ 150,0 }, m_MiddlePos(Point2f{ shape.left + shape.width / 2, shape.bottom + shape.height / 2 }), m_Shape(shape), m_pTexture(std::make_unique<Texture>(texturePath)) {}
 
 void Product::Update(float elapsedSec)
 {

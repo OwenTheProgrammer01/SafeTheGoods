@@ -14,7 +14,6 @@ public:
 
 	void AddProduct(Rectf& shape, std::string texturePath);
 	void RemoveProduct();
-	void RemoveProduct(int index);
 
 	bool CheckIfProductIsInCheckpoint(const Rectf& rect) const;
 	bool CheckIfProductIsOfScreen() const;
