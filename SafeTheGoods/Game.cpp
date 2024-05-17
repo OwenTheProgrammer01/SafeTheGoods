@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "Game.h"
 
+#include <iostream>
+
 Game::Game(const Window& window)
-	:BaseGame{ window }, m_Window{ 0, 0, window.width, window.height }
+	:BaseGame{ window }, m_Window{ 0, 0, window.width, window.height }, m_ShapeCheckpoint{ window.width/2 - 40, window.height/2 - 40, 80, 80 }
 {
 	Initialize();
 }
@@ -14,7 +16,7 @@ Game::~Game()
 
 void Game::Initialize()
 {
-	
+	AddCheckpoints();
 }
 
 void Game::Cleanup()
@@ -34,11 +36,15 @@ void Game::Update(float elapsedSec)
 	//{
 	//	std::cout << "Left and up arrow keys are down\n";
 	//}
+	m_ProductManager.Update(elapsedSec);
+	m_CheckpointManager.Update(elapsedSec);
 }
 
 void Game::Draw() const
 {
 	ClearBackground();
+	m_ProductManager.Draw();
+	m_CheckpointManager.Draw();
 }
 
 void Game::ProcessKeyDownEvent(const SDL_KeyboardEvent& e)
@@ -108,4 +114,9 @@ void Game::ClearBackground() const
 {
 	glClearColor(0.0f, 0.2f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Game::AddCheckpoints()
+{
+	m_CheckpointManager.AddCheckpoint(m_ShapeCheckpoint);
 }

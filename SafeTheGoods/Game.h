@@ -1,5 +1,8 @@
 #pragma once
 #include "BaseGame.h"
+#include "ProductManager.h"
+#include "CheckpointManager.h"
+
 class Game : public BaseGame
 {
 public:
@@ -22,12 +25,17 @@ public:
 	void ProcessMouseUpEvent(const SDL_MouseButtonEvent& e) override;
 
 private:
-
 	// FUNCTIONS
 	void Initialize();
 	void Cleanup();
 	void ClearBackground() const;
 
+	void AddCheckpoints();
+
 	// DATA MEMBERS
 	Rectf m_Window;
+
+	ProductManager m_ProductManager;
+	CheckpointManager m_CheckpointManager;
+	Rectf m_ShapeCheckpoint;
 };
