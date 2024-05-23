@@ -42,7 +42,7 @@ void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 		++index;
 	}
 	
-	std::cout << "No product in checkpoint ---> Score -" << std::endl;
+	std::cout << "No product in checkpoint ---> Score -2" << std::endl;
 	return;
 }
 
