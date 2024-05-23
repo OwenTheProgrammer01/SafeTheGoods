@@ -4,7 +4,7 @@
 #include <iostream>
 
 ProductManager::ProductManager()
-	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), MAX_PRODUCTS(10)
+	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), MAX_PRODUCTS(8), OFFSCREEN(850)
 {
 	AddProduct(m_ShapeProduct, m_TexturePath);
 }
@@ -15,31 +15,8 @@ void ProductManager::Update(float elapsedSec)
 	{
 		product->Update(elapsedSec);
 	}
-
-	if (not m_pProducts.size() == 0)
-	{
-		if (m_pProducts.size() < MAX_PRODUCTS)
-		{
-			if (m_pProducts.back()->GetMiddlePos().x >= 70)
-			{
-				auto random = rand() % m_FrequentGoodProduct;
-				if (random == 0)
-				{
-					m_TexturePath = "Images/RedBottle.png";
-				}
-				else
-				{
-					m_TexturePath = "Images/GreenBottle.png";
-				}
-				AddProduct(m_ShapeProduct, m_TexturePath);
-			}
-
-		}
-		if (m_pProducts[0]->GetMiddlePos().x >= 850)
-		{
-			RemoveProduct();
-		}
-	}
+	ProductSetup();
+	RemoveProductsOffScreen();
 }
 
 void ProductManager::Draw() const
@@ -50,29 +27,67 @@ void ProductManager::Draw() const
 	}
 }
 
+
+void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
+{
+	int index = 0;
+	for (const auto& product : m_pProducts)
+	{
+		if (product->IsInCheckpoint(rect))
+		{
+			product->IsBadProduct() ? std::cout << "Score +5" << std::endl : std::cout << "Score -5" << std::endl;
+			m_pProducts.erase(m_pProducts.begin() + index);
+			return;
+		}
+		++index;
+	}
+	
+	std::cout << "No product in checkpoint ---> Score -" << std::endl;
+	return;
+}
+
 void ProductManager::AddProduct(Rectf& shape, std::string texturePath)
 {
 	m_pProducts.emplace_back(std::make_unique<Product>(shape, texturePath));
-	std::cout << m_pProducts.size() << std::endl;
 }
+
+void ProductManager::ProductSetup()
+{
+	if (m_pProducts.size() < MAX_PRODUCTS)
+	{
+		if (m_pProducts.back()->GetMiddlePos().x >= m_Distance)
+		{
+			m_Distance = (rand() % 100) + 105;
+
+			auto randomProduct = rand() % m_FrequentGoodProduct;
+			if (randomProduct == 0)
+			{
+				m_TexturePath = "Images/RedBottle.png";
+			}
+			else
+			{
+				m_TexturePath = "Images/GreenBottle.png";
+			}
+			AddProduct(m_ShapeProduct, m_TexturePath);
+		}
+
+	}
+} 
 
 void ProductManager::RemoveProduct()
 {
 	m_pProducts.erase(m_pProducts.begin());
 }
 
-bool ProductManager::CheckIfProductIsInCheckpoint(const Rectf& rect) const
+void ProductManager::RemoveProductsOffScreen()
 {
-	for (const auto& product : m_pProducts)
+	if (m_pProducts.size() != m_pProducts.empty())
 	{
-		return product->IsInCheckpoint(rect);
-	}
-}
-
-bool ProductManager::CheckIfProductIsOfScreen() const
-{
-	for (const auto& product : m_pProducts)
-	{
-		return true;
+		if (m_pProducts.front()->GetShape().left >= OFFSCREEN)
+		{
+			m_pProducts.front()->IsBadProduct() ? std::cout << "Score -1" << std::endl : std::cout << "Score +1" << std::endl;
+			
+			RemoveProduct();
+		}
 	}
 }

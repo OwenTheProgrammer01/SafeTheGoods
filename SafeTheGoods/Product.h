@@ -14,9 +14,11 @@ public:
 	void Draw() const;
 
 	bool IsInCheckpoint(const Rectf& other) const;
+	bool IsBadProduct() const { return m_TexturePath == "Images/RedBottle.png"; }
 
 	void SetMiddlePos(const Point2f& middlePos) { m_MiddlePos = middlePos; }
 	Point2f GetMiddlePos() const { return m_MiddlePos; }
+	Rectf GetShape() const { return m_Shape; }
 
 	Product(const Product& other) = delete;
 	Product& operator=(const Product& other) = delete;
@@ -27,4 +29,5 @@ private:
 	Point2f m_MiddlePos;
 	Rectf m_Shape;
 	std::unique_ptr<Texture> m_pTexture;
+	std::string m_TexturePath;
 };

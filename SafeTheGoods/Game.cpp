@@ -26,16 +26,6 @@ void Game::Cleanup()
 
 void Game::Update(float elapsedSec)
 {
-	// Check keyboard state
-	//const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
-	//if ( pStates[SDL_SCANCODE_RIGHT] )
-	//{
-	//	std::cout << "Right arrow key is down\n";
-	//}
-	//if ( pStates[SDL_SCANCODE_LEFT] && pStates[SDL_SCANCODE_UP])
-	//{
-	//	std::cout << "Left and up arrow keys are down\n";
-	//}
 	m_ProductManager.Update(elapsedSec);
 	m_CheckpointManager.Update(elapsedSec);
 }
@@ -49,25 +39,17 @@ void Game::Draw() const
 
 void Game::ProcessKeyDownEvent(const SDL_KeyboardEvent& e)
 {
-	//std::cout << "KEYDOWN event: " << e.keysym.sym << std::endl;
+
 }
 
 void Game::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 {
-	//std::cout << "KEYUP event: " << e.keysym.sym << std::endl;
-	//switch ( e.keysym.sym )
-	//{
-	//case SDLK_LEFT:
-	//	//std::cout << "Left arrow key released\n";
-	//	break;
-	//case SDLK_RIGHT:
-	//	//std::cout << "`Right arrow key released\n";
-	//	break;
-	//case SDLK_1:
-	//case SDLK_KP_1:
-	//	//std::cout << "Key 1 released\n";
-	//	break;
-	//}
+	switch ( e.keysym.sym )
+	{
+	case SDLK_SPACE:
+		m_ProductManager.CheckProductInCheckpoint(m_ShapeCheckpoint);
+		break;
+	}
 }
 
 void Game::ProcessMouseMotionEvent(const SDL_MouseMotionEvent& e)
