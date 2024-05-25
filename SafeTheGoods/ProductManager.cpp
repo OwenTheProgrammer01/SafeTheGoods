@@ -5,7 +5,7 @@
 #include <iostream>
 
 ProductManager::ProductManager()
-	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), MAX_PRODUCTS(8), OFFSCREEN(850)
+	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), LUCKYPRODUCT(35), MAX_PRODUCTS(8), OFFSCREEN(850)
 {
 	AddProduct(m_ShapeProduct, m_TexturePath);
 }
@@ -44,7 +44,7 @@ void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 	}
 	
 	std::cout << "No product in checkpoint" << std::endl;
-	Score::GetInstance().AddScore(-1);
+	Score::GetInstance().AddScore(-2);
 	return;
 }
 
@@ -68,7 +68,7 @@ void ProductManager::ProductSetup()
 			}
 			else
 			{
-				auto randomLucky = rand() % 5;
+				auto randomLucky = rand() % LUCKYPRODUCT;
 				if (randomLucky == 0)
 					m_TexturePath = "Images/GoldenBottle.png";
 				else
@@ -76,7 +76,6 @@ void ProductManager::ProductSetup()
 			}
 			AddProduct(m_ShapeProduct, m_TexturePath);
 		}
-
 	}
 } 
 

@@ -30,6 +30,7 @@ private:
 	std::string m_TexturePath;
 	int m_FrequentGoodProduct;
 	int m_Distance;
+	const int LUCKYPRODUCT;
 	const int MAX_PRODUCTS;
 	const int OFFSCREEN;
 };
