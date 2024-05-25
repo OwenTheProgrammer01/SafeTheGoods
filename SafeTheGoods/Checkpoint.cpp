@@ -5,10 +5,7 @@
 Checkpoint::Checkpoint(Rectf& shape)
 	: m_Shape(shape) {}
 
-void Checkpoint::Update(float elapsedSec)
-{
-
-}
+void Checkpoint::Update(float elapsedSec) {}
 
 void Checkpoint::Draw() const
 {

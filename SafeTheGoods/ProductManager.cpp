@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ProductManager.h"
+#include "Score.h"
 
 #include <iostream>
 
@@ -35,14 +36,15 @@ void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 	{
 		if (product->IsInCheckpoint(rect))
 		{
-			product->IsBadProduct() ? std::cout << "Score +5" << std::endl : std::cout << "Score -5" << std::endl;
+			product->IsBadProduct() ? Score::GetInstance().AddScore(5) : Score::GetInstance().AddScore(-5);
 			m_pProducts.erase(m_pProducts.begin() + index);
 			return;
 		}
 		++index;
 	}
 	
-	std::cout << "No product in checkpoint ---> Score -2" << std::endl;
+	std::cout << "No product in checkpoint" << std::endl;
+	Score::GetInstance().AddScore(-1);
 	return;
 }
 
@@ -66,7 +68,11 @@ void ProductManager::ProductSetup()
 			}
 			else
 			{
-				m_TexturePath = "Images/GreenBottle.png";
+				auto randomLucky = rand() % 5;
+				if (randomLucky == 0)
+					m_TexturePath = "Images/GoldenBottle.png";
+				else
+					m_TexturePath = "Images/GreenBottle.png";
 			}
 			AddProduct(m_ShapeProduct, m_TexturePath);
 		}
@@ -85,7 +91,7 @@ void ProductManager::RemoveProductsOffScreen()
 	{
 		if (m_pProducts.front()->GetShape().left >= OFFSCREEN)
 		{
-			m_pProducts.front()->IsBadProduct() ? std::cout << "Score -1" << std::endl : std::cout << "Score +1" << std::endl;
+			m_pProducts.front()->IsBadProduct() ? Score::GetInstance().AddScore(-5) : Score::GetInstance().AddScore(5);
 			
 			RemoveProduct();
 		}

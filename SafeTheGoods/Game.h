@@ -2,6 +2,7 @@
 #include "BaseGame.h"
 #include "ProductManager.h"
 #include "CheckpointManager.h"
+#include "Score.h"
 
 class Game : public BaseGame
 {
@@ -33,9 +34,7 @@ private:
 	void AddCheckpoints();
 
 	// DATA MEMBERS
-	Rectf m_Window;
-
 	ProductManager m_ProductManager;
 	CheckpointManager m_CheckpointManager;
-	Rectf m_ShapeCheckpoint;
+	Score m_Score;
 };

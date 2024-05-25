@@ -4,7 +4,7 @@
 #include <iostream>
 
 Game::Game(const Window& window)
-	:BaseGame{ window }, m_Window{ 0, 0, window.width, window.height }, m_ShapeCheckpoint{ window.width/2 - 40, window.height/2 - 40, 80, 80 }
+	:BaseGame{ window }
 {
 	Initialize();
 }
@@ -28,6 +28,7 @@ void Game::Update(float elapsedSec)
 {
 	m_ProductManager.Update(elapsedSec);
 	m_CheckpointManager.Update(elapsedSec);
+	m_Score.GetInstance().Update(elapsedSec);
 }
 
 void Game::Draw() const
@@ -35,6 +36,7 @@ void Game::Draw() const
 	ClearBackground();
 	m_ProductManager.Draw();
 	m_CheckpointManager.Draw();
+	m_Score.GetInstance().Draw();
 }
 
 void Game::ProcessKeyDownEvent(const SDL_KeyboardEvent& e)
@@ -47,7 +49,7 @@ void Game::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 	switch ( e.keysym.sym )
 	{
 	case SDLK_SPACE:
-		m_ProductManager.CheckProductInCheckpoint(m_ShapeCheckpoint);
+		m_ProductManager.CheckProductInCheckpoint(m_CheckpointManager.GetShape());
 		break;
 	}
 }
@@ -100,5 +102,5 @@ void Game::ClearBackground() const
 
 void Game::AddCheckpoints()
 {
-	m_CheckpointManager.AddCheckpoint(m_ShapeCheckpoint);
+	m_CheckpointManager.AddCheckpoint();
 }

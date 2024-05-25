@@ -17,9 +17,9 @@ void CheckpointManager::Draw() const
 	}
 }
 
-void CheckpointManager::AddCheckpoint(Rectf& shape)
+void CheckpointManager::AddCheckpoint()
 {
-	m_pCheckpoints.emplace_back(std::make_unique<Checkpoint>(shape));
+	m_pCheckpoints.emplace_back(std::make_unique<Checkpoint>(m_ShapeCheckpoint));
 }
 
 void CheckpointManager::RemoveCheckpoint()
