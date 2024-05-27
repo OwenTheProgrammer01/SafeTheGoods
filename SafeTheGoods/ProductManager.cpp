@@ -1,13 +1,20 @@
 #include "pch.h"
 #include "ProductManager.h"
 #include "Score.h"
+#include "Level.h"
+#include "Mistakes.h"
 
 #include <iostream>
 
 ProductManager::ProductManager()
-	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), LUCKYPRODUCT(30), MAX_PRODUCTS(8), OFFSCREEN(850)
+	: SHAPE(Rectf{ -70, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_Distance(105), m_Speed{ 100, 0 }, m_ChanceBadProduct(4), CHANCELUCKYPRODUCT(25), MAX_PRODUCTS(8), OFFSCREEN(850), m_Level(1)
 {
-	AddProduct(m_ShapeProduct, m_TexturePath);
+	Initialize();
+}
+
+void ProductManager::Initialize()
+{
+	AddProduct();
 }
 
 void ProductManager::Update(float elapsedSec)
@@ -18,6 +25,9 @@ void ProductManager::Update(float elapsedSec)
 	}
 	ProductSetup();
 	RemoveProductsOffScreen();
+
+	if (IsLevelChanged())
+		SetSpeed();
 }
 
 void ProductManager::Draw() const
@@ -28,6 +38,14 @@ void ProductManager::Draw() const
 	}
 }
 
+void ProductManager::Reset()
+{
+	m_pProducts.clear();
+	m_Level = 1;
+	m_Speed = Vector2f{ 100, 0 };
+	m_Distance = 105;
+	m_ChanceBadProduct = 4;
+}
 
 void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 {
@@ -36,21 +54,35 @@ void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 	{
 		if (product->IsInCheckpoint(rect))
 		{
-			product->IsBadProduct() ? Score::GetInstance().AddScore(5) : Score::GetInstance().AddScore(-5);
+			auto productType = product->GetProductType();
+			switch (productType)
+			{
+			case 0: Score::GetInstance().AddScore(5); break;
+			case 1: Mistakes::GetInstance().AddMistake(); break;
+			case 2: break;
+			}
 			m_pProducts.erase(m_pProducts.begin() + index);
 			return;
 		}
 		++index;
 	}
 	
-	std::cout << "No product in checkpoint" << std::endl;
-	Score::GetInstance().AddScore(-2);
+	Mistakes::GetInstance().AddMistake();
 	return;
 }
 
-void ProductManager::AddProduct(Rectf& shape, std::string texturePath)
+void ProductManager::SetSpeed()
 {
-	m_pProducts.emplace_back(std::make_unique<Product>(shape, texturePath));
+	m_Speed.x += 10;
+	for (const auto& product : m_pProducts)
+	{
+		product->SetSpeed(m_Speed);
+	}
+}
+
+void ProductManager::AddProduct()
+{
+	m_pProducts.emplace_back(std::make_unique<Product>(SHAPE, m_TexturePath, m_Speed));
 }
 
 void ProductManager::ProductSetup()
@@ -61,20 +93,20 @@ void ProductManager::ProductSetup()
 		{
 			m_Distance = (rand() % 100) + 105;
 
-			auto randomProduct = rand() % m_FrequentGoodProduct;
+			auto randomProduct = rand() % m_ChanceBadProduct;
 			if (randomProduct == 0)
 			{
 				m_TexturePath = "Images/RedBottle.png";
 			}
 			else
 			{
-				auto randomLucky = rand() % LUCKYPRODUCT;
+				auto randomLucky = rand() % CHANCELUCKYPRODUCT;
 				if (randomLucky == 0)
 					m_TexturePath = "Images/GoldenBottle.png";
 				else
 					m_TexturePath = "Images/GreenBottle.png";
 			}
-			AddProduct(m_ShapeProduct, m_TexturePath);
+			AddProduct();
 		}
 	}
 } 
@@ -86,13 +118,28 @@ void ProductManager::RemoveProduct()
 
 void ProductManager::RemoveProductsOffScreen()
 {
-	if (m_pProducts.size() != m_pProducts.empty())
+	if (not m_pProducts.empty())
 	{
 		if (m_pProducts.front()->GetShape().left >= OFFSCREEN)
 		{
-			m_pProducts.front()->IsBadProduct() ? Score::GetInstance().AddScore(-5) : Score::GetInstance().AddScore(5);
-			
+			auto productType = m_pProducts.front()->GetProductType();
+			switch (productType)
+			{
+			case 0: Mistakes::GetInstance().AddMistake(); break;
+			case 1: Score::GetInstance().AddScore(5); break;
+			case 2: Score::GetInstance().AddScore(50); break;
+			}
 			RemoveProduct();
 		}
 	}
+}
+
+bool ProductManager::IsLevelChanged()
+{
+	if (Level::GetInstance().GetLevel() != m_Level)
+	{
+		m_Level = Level::GetInstance().GetLevel();
+		return true;
+	}
+	return false;
 }

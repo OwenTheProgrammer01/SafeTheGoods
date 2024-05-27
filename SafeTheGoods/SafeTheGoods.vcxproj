@@ -153,7 +153,9 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
   <ItemGroup>
     <ClCompile Include="CheckpointManager.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mistakes.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="Checkpoint.cpp" />
@@ -163,6 +165,8 @@ xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)" /y /d /s</Command>
   <ItemGroup>
     <ClInclude Include="CheckpointManager.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Mistakes.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="Checkpoint.h" />

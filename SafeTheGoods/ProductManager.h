@@ -9,28 +9,38 @@ public:
 	ProductManager();
 	~ProductManager() = default;
 
+	void Initialize();
+
 	void Update(float elapsedSec);
 	void Draw() const;
 
+	void Reset();
+
 	void CheckProductInCheckpoint(const Rectf& rect);
+	void SetSpeed();
 
 	ProductManager(const ProductManager& other) = delete;
 	ProductManager& operator=(const ProductManager& other) = delete;
 	ProductManager(ProductManager&& other) = delete;
 	ProductManager& operator=(ProductManager&& other) = delete;
 private:
-	void AddProduct(Rectf& shape, std::string texturePath);
+	void AddProduct();
 	void ProductSetup();
 	void RemoveProduct();
 	void RemoveProductsOffScreen();
 
+	bool IsLevelChanged();
+
 	std::vector<std::unique_ptr<Product>> m_pProducts;
 
-	Rectf m_ShapeProduct;
+	const Rectf SHAPE;
 	std::string m_TexturePath;
-	int m_FrequentGoodProduct;
 	int m_Distance;
-	const int LUCKYPRODUCT;
+	Vector2f m_Speed;
+	int m_ChanceBadProduct;
+	const int CHANCELUCKYPRODUCT;
 	const int MAX_PRODUCTS;
 	const int OFFSCREEN;
+
+	int m_Level;
 };

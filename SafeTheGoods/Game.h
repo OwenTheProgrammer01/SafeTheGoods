@@ -3,6 +3,8 @@
 #include "ProductManager.h"
 #include "CheckpointManager.h"
 #include "Score.h"
+#include "Level.h"
+#include "Mistakes.h"
 
 class Game : public BaseGame
 {
@@ -31,10 +33,12 @@ private:
 	void Cleanup();
 	void ClearBackground() const;
 
-	void AddCheckpoints();
+	bool CheckNextLevel();
 
 	// DATA MEMBERS
 	ProductManager m_ProductManager;
 	CheckpointManager m_CheckpointManager;
 	Score m_Score;
+	Level m_Level;
+	Mistakes m_Mistakes;
 };

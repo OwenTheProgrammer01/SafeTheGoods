@@ -7,14 +7,15 @@
 class Product
 {
 public:
-	Product(Rectf& shape, std::string texturePath);
+	Product(const Rectf& shape, std::string texturePath, Vector2f speed);
 	~Product() = default;
 
 	void Update(float elapsedSec);
 	void Draw() const;
 
+	void SetSpeed(Vector2f speed);
+
 	bool IsInCheckpoint(const Rectf& other) const;
-	bool IsBadProduct() const { return m_TexturePath == "Images/RedBottle.png"; }
 	int GetProductType() const;
 
 	void SetMiddlePos(const Point2f& middlePos) { m_MiddlePos = middlePos; }
@@ -26,7 +27,7 @@ public:
 	Product(Product&& other) = delete;
 	Product& operator=(Product&& other) = delete;
 private:
-	const Vector2f m_Speed;
+	Vector2f m_Speed;
 	Point2f m_MiddlePos;
 	Rectf m_Shape;
 	std::unique_ptr<Texture> m_pTexture;
@@ -38,4 +39,6 @@ private:
 		Good,
 		Lucky
 	};
+
+	ProductType m_ProductType;
 };
