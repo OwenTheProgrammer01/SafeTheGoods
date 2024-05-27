@@ -5,7 +5,7 @@
 #include <iostream>
 
 ProductManager::ProductManager()
-	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), LUCKYPRODUCT(35), MAX_PRODUCTS(8), OFFSCREEN(850)
+	: m_ShapeProduct(Rectf{ -35, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_FrequentGoodProduct(5), m_Distance(105), LUCKYPRODUCT(30), MAX_PRODUCTS(8), OFFSCREEN(850)
 {
 	AddProduct(m_ShapeProduct, m_TexturePath);
 }

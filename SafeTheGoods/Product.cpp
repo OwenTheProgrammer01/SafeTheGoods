@@ -38,3 +38,12 @@ bool Product::IsInCheckpoint(const Rectf& rect) const
 {
 	return (m_MiddlePos.x > rect.left && m_MiddlePos.x < rect.left + rect.width && m_MiddlePos.y > rect.bottom && m_MiddlePos.y < rect.bottom + rect.height);
 }
+
+//int Product::GetProductType() const
+//{
+//	switch (m_TexturePath)
+//	{
+//	case:
+//		break;
+//	}
+//}
