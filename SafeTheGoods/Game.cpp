@@ -7,6 +7,7 @@ Game::Game(const Window& window)
 	:BaseGame{ window }
 {
 	Initialize();
+	std::cout << "How to play:\n\tPress space when a bad product passes the green checkpoint.\n\tIf you didn't remove the bad product on time it wel add up an error.\n\tIf you remove a good product it will add up an error.\n\tIf a lucky (golden) product occurs you need to remove it inside the checkpoint to get more points\n\tIf you don't remove the lucky product you wil get no points but, no error will add up\n\tGame ends after you got your fifth error.\n\nGoal of the game:\n\tTry to beat your high score." << std::endl;
 }
 
 Game::~Game()
@@ -36,7 +37,20 @@ void Game::Update(float elapsedSec)
 		m_ProductManager.Update(elapsedSec);
 		m_CheckpointManager.Update(elapsedSec);
 
-		m_Mistakes.GetInstance().CheckGameOver();
+		if (m_Mistakes.GetInstance().CheckGameOver())
+		{
+			Level::GetInstance().SetGameOver(true);
+			if (CheckNewHighScore())
+			{
+				m_NewHighScoreSound.Play(0);
+				m_Score.GetInstance().SetHighScore();
+			}
+			else
+			{
+				m_GameOverSound.Play(0);
+				m_Score.GetInstance().ShowHighScore();
+			}
+		}
 
 		if (CheckNextLevel())
 		{
@@ -46,11 +60,6 @@ void Game::Update(float elapsedSec)
 	}
 	else
 	{
-		if (m_Score.GetInstance().GetScore() > m_Score.GetInstance().GetHighScore())
-		{
-			m_Score.GetInstance().SetHighScore();
-		}
-
 		m_Score.GetInstance().Reset();
 		m_Mistakes.GetInstance().Reset();
 		m_Level.GetInstance().Reset();
@@ -79,12 +88,15 @@ void Game::ProcessKeyUpEvent(const SDL_KeyboardEvent& e)
 	switch ( e.keysym.sym )
 	{
 	case SDLK_SPACE:
-		if (not m_Level.GetInstance().GetGameOver())
-			m_ProductManager.CheckProductInCheckpoint(m_CheckpointManager.GetShape());
-		else
+		if (m_Level.GetInstance().GetGameOver())
 		{
 			Initialize();
+			m_StartGameSound.Play(0);
 			m_Level.GetInstance().SetGameOver(false);
+		}
+		else
+		{
+			m_ProductManager.CheckProductInCheckpoint(m_CheckpointManager.GetShape());
 		}
 		break;
 	}
@@ -105,12 +117,11 @@ void Game::ProcessMouseDownEvent(const SDL_MouseButtonEvent& e)
 	//	break;
 	//case SDL_BUTTON_RIGHT:
 	//	std::cout << " right button " << std::endl;
-	//	break;
+	//	break; 
 	//case SDL_BUTTON_MIDDLE:
 	//	std::cout << " middle button " << std::endl;
 	//	break;
 	//}
-	
 }
 
 void Game::ProcessMouseUpEvent(const SDL_MouseButtonEvent& e)
@@ -142,6 +153,15 @@ bool Game::CheckNextLevel()
 	int currentLevel = Level::GetInstance().GetLevel();
 
 	if ((currentScore / 100) > currentLevel - 1)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Game::CheckNewHighScore()
+{
+	if (m_Score.GetInstance().GetScore() > m_Score.GetInstance().GetHighScore())
 	{
 		return true;
 	}

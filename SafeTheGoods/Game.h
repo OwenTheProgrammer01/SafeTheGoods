@@ -34,6 +34,7 @@ private:
 	void ClearBackground() const;
 
 	bool CheckNextLevel();
+	bool CheckNewHighScore();
 
 	// DATA MEMBERS
 	ProductManager m_ProductManager;
@@ -41,4 +42,8 @@ private:
 	Score m_Score;
 	Level m_Level;
 	Mistakes m_Mistakes;
+
+	SoundEffect m_StartGameSound{ "Sounds/Start-Game.wav" };
+	SoundEffect m_GameOverSound{ "Sounds/Game-Over.wav" };
+	SoundEffect m_NewHighScoreSound{ "Sounds/New-High-Score.wav" };
 };

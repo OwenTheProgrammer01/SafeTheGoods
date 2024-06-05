@@ -23,7 +23,6 @@ bool Mistakes::CheckGameOver() const
 {
 	if (m_Mistakes >= MAXMISTAKES)
 	{
-		Level::GetInstance().SetGameOver(true);
 		return true;
 	}
 	return false;

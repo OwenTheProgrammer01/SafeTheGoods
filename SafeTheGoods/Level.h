@@ -1,6 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "Texture.h"
+#include "SoundEffect.h"
 
 class Level final : public Singleton<Level>
 {
@@ -16,7 +17,7 @@ class Level final : public Singleton<Level>
 	void Reset();
 
 	void SetLevel(int level) { m_Level = level; }
-	void NextLevel() { ++m_Level; }
+	void NextLevel() { ++m_Level; m_LevelUpSound.Play(0); }
 	int GetLevel() const { return m_Level; }
 
 	void SetGameOver(bool gameOver) { m_GameOver = gameOver; }
@@ -36,4 +37,5 @@ private:
 	Color4f m_TextColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 	TTF_Font* m_pFont{ TTF_OpenFont("Fonts/ErbosDraco.ttf", 36) };
 	Texture* m_pTextTexture{ new Texture("Level:" + std::to_string(m_Level), m_pFont, m_TextColor) };
+	SoundEffect m_LevelUpSound{ "Sounds/Level-Up.wav" };
 };

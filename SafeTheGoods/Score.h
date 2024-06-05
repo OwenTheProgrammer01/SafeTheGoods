@@ -16,13 +16,8 @@ public:
 	void AddScore(int score) { m_Score += score; }
 	int GetScore() const { return m_Score; }
 
-	void SetHighScore() 
-	{
-		m_HighScore = m_Score;
-		m_Position = Point2f{ 220, 280 };
-		delete m_pTextTexture;
-		m_pTextTexture = new Texture("New High Score:" + std::to_string(m_HighScore), m_pFont, m_TextColor);
-	}
+	void ShowHighScore();
+	void SetHighScore();
 	int GetHighScore() const { return m_HighScore; }
 
 	Score(const Score& other) = delete;

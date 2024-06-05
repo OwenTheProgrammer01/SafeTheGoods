@@ -1,5 +1,6 @@
 #pragma once
 #include "Product.h"
+#include "SoundEffect.h"
 
 #include <vector>
 
@@ -43,4 +44,7 @@ private:
 	const int OFFSCREEN;
 
 	int m_Level;
+
+	SoundEffect m_DeleteProductSound{ "Sounds/Delete-Product.wav" };
+	SoundEffect m_PlusScoreSound{ "Sounds/Plus-Score.wav" };
 };

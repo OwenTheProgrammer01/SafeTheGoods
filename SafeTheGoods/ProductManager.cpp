@@ -7,7 +7,7 @@
 #include <iostream>
 
 ProductManager::ProductManager()
-	: SHAPE(Rectf{ -70, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_Distance(105), m_Speed{ 100, 0 }, m_ChanceBadProduct(4), CHANCELUCKYPRODUCT(25), MAX_PRODUCTS(8), OFFSCREEN(850), m_Level(1)
+	: SHAPE(Rectf{ -70, 215, 70, 70 }), m_TexturePath("Images/GreenBottle.png"), m_Distance(105), m_Speed{ 100, 0 }, m_ChanceBadProduct(6), CHANCELUCKYPRODUCT(25), MAX_PRODUCTS(8), OFFSCREEN(850), m_Level(1)
 {
 	Initialize();
 }
@@ -27,7 +27,13 @@ void ProductManager::Update(float elapsedSec)
 	RemoveProductsOffScreen();
 
 	if (IsLevelChanged())
+	{
+		if (m_Level % 5 == 0 and m_ChanceBadProduct > 3)
+		{
+			m_ChanceBadProduct -= 1;
+		}
 		SetSpeed();
+	}
 }
 
 void ProductManager::Draw() const
@@ -44,7 +50,7 @@ void ProductManager::Reset()
 	m_Level = 1;
 	m_Speed = Vector2f{ 100, 0 };
 	m_Distance = 105;
-	m_ChanceBadProduct = 4;
+	m_ChanceBadProduct = 6;
 }
 
 void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
@@ -57,10 +63,11 @@ void ProductManager::CheckProductInCheckpoint(const Rectf& rect)
 			auto productType = product->GetProductType();
 			switch (productType)
 			{
-			case 0: Score::GetInstance().AddScore(5); break;
+			case 0: Score::GetInstance().AddScore(10); break;
 			case 1: Mistakes::GetInstance().AddMistake(); break;
-			case 2: break;
+			case 2: Score::GetInstance().AddScore(50); break;
 			}
+			m_DeleteProductSound.Play(0);
 			m_pProducts.erase(m_pProducts.begin() + index);
 			return;
 		}
@@ -126,8 +133,8 @@ void ProductManager::RemoveProductsOffScreen()
 			switch (productType)
 			{
 			case 0: Mistakes::GetInstance().AddMistake(); break;
-			case 1: Score::GetInstance().AddScore(5); break;
-			case 2: Score::GetInstance().AddScore(50); break;
+			case 1: Score::GetInstance().AddScore(10); m_PlusScoreSound.Play(0); break;
+			case 2: break;
 			}
 			RemoveProduct();
 		}
